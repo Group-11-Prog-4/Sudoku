@@ -10,6 +10,6 @@ def draw_background():
 
 def main():
     draw_background()
-
-if __name__ == "__main__":
+    
+while 1:
     main()
