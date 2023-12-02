@@ -1,4 +1,4 @@
-import math,random,pygame
+import math,random
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -23,8 +23,20 @@ class SudokuGenerator:
 	None
     '''
     def __init__(self, row_length, removed_cells):
-        self.row_length = 9
-        self.box_length = 3
+        self.row_length = row_length
+        self.box_length = math.sqrt(self.row_length)
+        self.removed_cells = removed_cells
+        self.board = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
 
     '''
 	Returns a 2D python list of numbers which represents the board
@@ -33,7 +45,7 @@ class SudokuGenerator:
 	Return: list[list]
     '''
     def get_board(self):
-        pass
+        return self.board
 
     '''
 	Displays the board to the console
@@ -43,7 +55,7 @@ class SudokuGenerator:
 	Return: None
     '''
     def print_board(self):
-        pass
+        print(self.board)
 
     '''
 	Determines if num is contained in the specified row (horizontal) of the board
@@ -56,7 +68,10 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_row(self, row, num):
-        pass
+        if num in self.board[row]:
+            return False
+        else:
+            return True
 
     '''
 	Determines if num is contained in the specified column (vertical) of the board
@@ -69,7 +84,10 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_col(self, col, num):
-        pass
+        for i in range(len(self.board)):
+            if num == self.board[i][col]:
+                return False
+        return True
 
     '''
 	Determines if num is contained in the 3x3 box specified on the board
@@ -84,6 +102,7 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_box(self, row_start, col_start, num):
+        #if num in self.board[row_start][]
         pass
     
     '''
@@ -223,7 +242,44 @@ class Cell:
         self.value = value
     
     def set_sketched_value(self, value):
-        pass
+        self.sketched_value = value
 
     def draw_board(self):
+        pass
+    
+class Board:
+    def __init__(self, width, height, screen, difficulty) -> None:
+        pass
+    
+    def draw(self):
+        pass
+    
+    def select(self, row, col):
+        pass
+    
+    def click(self, x, y):
+        pass
+    
+    def clear(self):
+        pass
+    
+    def sketch(self, value):
+        pass
+    
+    def place_number(self, value):
+        pass
+    
+    def reset_to_original(self):
+        pass
+    
+    def is_full(self):
+        pass
+    
+    def update_board(self):
+        pass
+    
+    def find_empty(self):
+        pass
+    
+    def check_board(self):
         pass
