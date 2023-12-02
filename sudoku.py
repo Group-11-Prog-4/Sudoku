@@ -5,7 +5,7 @@ screen_size = 900, 700
 screen = pygame.display.set_mode(screen_size)
 
 def draw_background():
-    print("Hi")
+    print("Hi2")
 
 
 def main():
