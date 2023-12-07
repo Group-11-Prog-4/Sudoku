@@ -1,4 +1,4 @@
-import math,random
+import math,random, copy
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -258,60 +258,7 @@ def generate_sudoku(size, removed):
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
     board = sudoku.get_board()
+    solved = copy.deepcopy(board)
     sudoku.remove_cells()
     board = sudoku.get_board()
-    return board
-
-# cell class
-class Cell:
-    def __init__(self, value, row, col, screen):
-        self.value = value
-        self.row = row
-        self.col = col
-        self.screen = screen
-    
-    def set_cell_value(self, value):
-        self.value = value
-    
-    def set_sketched_value(self, value):
-        self.sketched_value = value
-
-    def draw_board(self):
-        pass
-    
-class Board:
-    def __init__(self, width, height, screen, difficulty) -> None:
-        pass
-    
-    def draw(self):
-        pass
-    
-    def select(self, row, col):
-        pass
-    
-    def click(self, x, y):
-        pass
-    
-    def clear(self):
-        pass
-    
-    def sketch(self, value):
-        pass
-    
-    def place_number(self, value):
-        pass
-    
-    def reset_to_original(self):
-        pass
-    
-    def is_full(self):
-        pass
-    
-    def update_board(self):
-        pass
-    
-    def find_empty(self):
-        pass
-    
-    def check_board(self):
-        pass
+    return [board, solved]
