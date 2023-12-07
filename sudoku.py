@@ -6,7 +6,7 @@ import copy
 pygame.init()
 
 # Screen dimensions and window setup
-screen_width, screen_height = 800, 800
+screen_width, screen_height = 750, 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Sudoku Game")
 
