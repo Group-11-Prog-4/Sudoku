@@ -1,9 +1,7 @@
 import pygame
 import sys
 import sudoku_generator
-#from sudokuu import game_loop
-#from game_won_screen import display_game_won_screen
-#from game_over_screen import display_game_over_screen
+import copy
 
 pygame.init()
 
@@ -100,7 +98,28 @@ def game_start_screen():
 
 def game_loop(removed):
     font = pygame.font.SysFont(None, 60)
-    number_grid = sudoku_generator.generate_sudoku(9, removed)
+    boards = sudoku_generator.generate_sudoku(9, removed)
+    number_grid = boards[0]
+    solved = boards[1]
+    user_input_grid = [[False for _ in range(9)] for _ in range(9)]  # To track cells where user inputs numbers
+    selected_cell = None
+    og_grid = copy.deepcopy(number_grid)
+    
+    def reset_game():
+        # Reset the number grid to its initial state and clear user inputs
+        number_grid = copy.deepcopy(og_grid)
+
+    def draw_button(screen, text, x, y, width, height, color):
+        button_font = pygame.font.SysFont('comicsansms', 20)
+        pygame.draw.rect(screen, color, (x, y, width, height))
+        text_surf = button_font.render(text, True, BLACK)
+        text_rect = text_surf.get_rect(center=(x + (width / 2), y + (height / 2)))
+        screen.blit(text_surf, text_rect)
+
+    def draw_game_buttons():
+        draw_button(screen, "Reset", 150, 750, 100, 30, BLUE)
+        draw_button(screen, "Restart", 350, 750, 100, 30, BLUE)
+        draw_button(screen, "Exit", 550, 750, 100, 30, BLUE)
     # Draws grid
     def draw_background():
         screen.fill(pygame.Color("white"))
@@ -117,26 +136,86 @@ def game_loop(removed):
             # Puts numbers in grid from sudoku_generator
 
     def draw_numbers():
-        row = 0
-        offset = 40
         for i in range(9):
             for j in range(9):
                 output = number_grid[i][j]
-                if output == 0:
+                if output != 0:
+                    color = pygame.Color("gray") if user_input_grid[i][j] else pygame.Color("black")
+                    text = font.render(str(output), True, color)
+                    screen.blit(text, (j * 80 + 40, i * 80 + 40))
+            # Highlight the selected cell
+        if selected_cell:
+            pygame.draw.rect(screen, pygame.Color("yellow"),
+                             pygame.Rect(selected_cell[1] * 80 + 15, selected_cell[0] * 80 + 15, 80, 80), 5)
+    
+    
+    def continue_game():
+        
+        for i in range(9):
+            for j in range(9):
+                if number_grid[i][j] == 0:
+                    return True
+        
+        for i in range(9):
+            for j in range(9):
+                if number_grid[i][j] == solved[i][j]:
                     continue
-                text = font.render(str(output), True, pygame.Color("black"))
-                screen.blit(text, pygame.Vector2((j * 80) + offset + 5, (i * 80) + offset - 5))
+                else:
+                    display_game_over_screen()
+                    pygame.display.update()
+        display_game_won_screen()
+        pygame.display.update()
+        
+                    
 
     game_in_progress = True
-    while game_in_progress:
+    while game_in_progress and continue_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            else:
-                draw_background()
-                draw_numbers()
-                pygame.display.flip()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Get mouse position and convert it to grid coordinates
+                x, y = event.pos
+                row, col = (y - 15) // 80, (x - 15) // 80
+                if 0 <= row < 9 and 0 <= col < 9:
+                    selected_cell = [row, col]
+                    
+                if 150 < x < 250 and 750 < y < 780:
+                    reset_game()
+                elif 350 < x < 450 and 750 < y < 780:
+                    game_start_screen()
+                elif 550 < x < 650 and 750 < y < 780:
+                    pygame.quit()
+                    sys.exit()
+            elif event.type == pygame.KEYDOWN and event.key not in [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]:
+                if selected_cell and event.unicode.isdigit():
+                    number = int(event.unicode)
+                    if number in range(1, 10):
+                        if og_grid[selected_cell[0]][selected_cell[1]] != 0:
+                            continue
+                        else:
+                            number_grid[selected_cell[0]][selected_cell[1]] = number
+                            user_input_grid[selected_cell[0]][
+                            selected_cell[1]] = True  # Mark this cell as having user input
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    if selected_cell[0] > 0:
+                        selected_cell[0] -= 1
+                elif event.key == pygame.K_DOWN:
+                    if selected_cell[0] < 8:
+                        selected_cell[0] += 1
+                elif event.key == pygame.K_LEFT:
+                    if selected_cell[1] > 0:
+                        selected_cell[1] -= 1
+                elif event.key == pygame.K_RIGHT:
+                    if selected_cell[1] < 8:
+                        selected_cell[1] += 1
+
+            draw_background()
+            draw_numbers()
+            draw_game_buttons()
+            pygame.display.update()
 
 def display_game_won_screen():
 
