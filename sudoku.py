@@ -106,8 +106,10 @@ def game_loop(removed):
     og_grid = copy.deepcopy(number_grid)
     
     def reset_game():
+        nonlocal number_grid
         # Reset the number grid to its initial state and clear user inputs
         number_grid = copy.deepcopy(og_grid)
+        
 
     def draw_button(screen, text, x, y, width, height, color):
         button_font = pygame.font.SysFont('comicsansms', 20)
@@ -182,7 +184,9 @@ def game_loop(removed):
                     selected_cell = [row, col]
                     
                 if 150 < x < 250 and 750 < y < 780:
+                    print("reset")
                     reset_game()
+                    pygame.display.update()
                 elif 350 < x < 450 and 750 < y < 780:
                     game_start_screen()
                 elif 550 < x < 650 and 750 < y < 780:
